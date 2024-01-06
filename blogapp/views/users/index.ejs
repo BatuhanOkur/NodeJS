@@ -12,31 +12,13 @@
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-3">
-                <div class="list-group">
-                    <% categories.forEach(element => { %>
-                        <a href="" class="list-group-item list-group-item-action"><%= element %></a>
-                    <% }) %>
-                </div>
+                <%- include('../partials/category-list', categories) %>
             </div>
             <div class="col-md-9">
                 <h1 class="h3 mb-3"><%=title%></h1>
-                <% blogs.forEach(element => { %>
-                    <% if (element.mainPage) { %>
-                        <div class="card mb-3">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <img src="<%= element.blogImage %>" class="img-fluid" alt="">
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><%= element.blogTitle %></h5>
-                                        <p class="card-text">
-                                            <%= element.blogDescription %>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <% blogs.forEach(blog => { %>
+                    <% if (blog.mainPage) { %>
+                        <%- include('../partials/blog-card',blog) %>
                     <% } %>
                 <% }) %>
             </div>
