@@ -30,86 +30,45 @@
             </div>
             <div class="col-md-9">
                 <h1 class="h3 mb-3">Bloglar</h1>
-                <div class="card mb-3">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <img src="/static/images/1.jpeg" class="img-fluid" alt="">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">Komple Uygulamalı Web Geliştirme</h5>
-                                <p class="card-text">
-                                    Sıfırdan ileri seviyeye Web Geliştirme: Html, css, Angular, JQuery .NET Core 
-                                </p>
+                <% blogs.forEach(element => { %>
+                        <div class="card mb-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <img src="<%= element.blogImage %>" class="img-fluid" alt="">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%= element.blogTitle %></h5>
+                                        <p class="card-text">
+                                            <%= element.blogDescription %>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card mb-3">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <img src="/static/images/2.jpeg" class="img-fluid" alt="">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">Python Programlama</h5>
-                                <p class="card-text">
-                                    Python Programlama kursuna katılmak için tıklayın!
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-3">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <img src="/static/images/3.jpeg" class="img-fluid" alt="">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">Komple Uygulamalı Web Geliştirme</h5>
-                                <p class="card-text">
-                                    Sıfırdan ileri seviyeye Web Geliştirme: Html, css, Angular, JQuery .NET Core 
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card mb-3">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <img src="/static/images/4.jpeg" class="img-fluid" alt="">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
-                                <h5 class="card-title">React JS ile web geliştirme</h5>
-                                <p class="card-text">
-                                    Sıfırdan ileri seviyeye React JS ile web geliştirme kursu.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <% }) %>
 
-                <div class="nav">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a href="" class="page-link">Geri</a>                            
-                        </li>
-                        <li class="page-item active">
-                            <a href="" class="page-link">1</a>                            
-                        </li>
-                        <li class="page-item">
-                            <a href="" class="page-link">2</a>                            
-                        </li>
-                        <li class="page-item">
-                            <a href="" class="page-link">3</a>                            
-                        </li>
-                        <li class="page-item">
-                            <a href="" class="page-link">İleri</a>                            
-                        </li>
-                    </ul>
-                </div>
+                <% if (blogs.length > 3) { %>
+                    <div class="nav">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a href="" class="page-link">Geri</a>                            
+                            </li>
+                            <li class="page-item active">
+                                <a href="" class="page-link">1</a>                            
+                            </li>
+                            <li class="page-item">
+                                <a href="" class="page-link">2</a>                            
+                            </li>
+                            <li class="page-item">
+                                <a href="" class="page-link">3</a>                            
+                            </li>
+                            <li class="page-item">
+                                <a href="" class="page-link">İleri</a>                            
+                            </li>
+                        </ul>
+                    </div>
+                <% } %>
             </div>
         </div>
     </div>
