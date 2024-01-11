@@ -1,40 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const db = require("../data/db");
+
+
 
 const data = {
     title: "Popüler Kurslar",
-    categories: ["Web Geliştirme", "Programlama", "Mobil Uygulamalar", "Veri Analizi", "Otomasyon Uygulamaları"],
-    blogs:[
-        {
-            blogid: 1,
-            blogTitle: "Komple Uygulamalı Web Geliştirme",
-            blogDescription: "Sıfırdan ileri seviyeye Web Geliştirme: Html, css, Angular, JQuery .NET Core",
-            blogImage:"/static/images/1.jpeg",
-            mainPage: true
-        },
-        {
-            blogid: 2,
-            blogTitle: "Python Programlama",
-            blogDescription: "Python Programlama kursuna katılmak için tıklayın!",
-            blogImage:"/static/images/2.jpeg",
-            mainPage: true
-        },
-        {
-            blogid: 3,
-            blogTitle: "Veri Bilimi",
-            blogDescription: "Python ile istatistik ve veri bilimi dersleri.",
-            blogImage:"/static/images/3.jpeg",
-            mainPage: false
-        },
-        {
-            blogid: 4,
-            blogTitle: "React JS Kursu",
-            blogDescription: "React JS ile frontend web geliştirme kursuna kaydolun!",
-            blogImage:"/static/images/4.jpeg",
-            mainPage: false
-        },
-    ]
+    categories: ["Web Geliştirme", "Programlama", "Mobil Uygulamalar", "Veri Analizi", "Otomasyon Uygulamaları"]
 }
 
 router.use("/blogs/:blogid",function(req,res){
@@ -42,11 +15,39 @@ router.use("/blogs/:blogid",function(req,res){
 });
 
 router.use("/blogs",function(req,res){
-    res.render("users/blogs", data);
+    db.execute("select * from blog where confirmation = 1")
+    .then(blogResult =>{
+
+        db.execute("select * from category where active = 1")
+        .then(categoryResult => {
+            res.render("users/blogs", {
+                title: "Popüler Kurslar",
+                blogs: blogResult[0],
+                categories: categoryResult[0]
+            });
+        })
+        .catch(err => console.log(err));
+        
+    })
+    .catch(err => console.log(err));
 });
 
 router.use("/",function(req,res){
-    res.render("users/index", data);
+    db.execute("select * from blog where mainpage = 1 and confirmation = 1")
+    .then(blogResult =>{
+
+        db.execute("select * from category where active = 1")
+        .then(categoryResult => {
+            res.render("users/index", {
+                title: "Popüler Kurslar",
+                blogs: blogResult[0],
+                categories: categoryResult[0]
+            });
+        })
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+    
 });
 
 module.exports = router;
