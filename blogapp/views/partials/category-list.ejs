@@ -1,6 +1,6 @@
 <div class="list-group">
-    <a href="" class="list-group-item list-group-item-action">Tüm Kategoriler</a>
+    <a href="/blogs/category/all" class="list-group-item list-group-item-action">Tüm Kategoriler</a>
     <% categories.forEach(element => { %>
-        <a href="" class="list-group-item list-group-item-action"><%= element.name %></a>
+        <a href="/blogs/category/<%= element.categoryid %>" class="list-group-item list-group-item-action"><%= element.name %></a>
     <% }) %>
 </div>
