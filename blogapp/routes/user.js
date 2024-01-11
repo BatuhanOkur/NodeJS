@@ -14,39 +14,34 @@ router.use("/blogs/:blogid",function(req,res){
     res.render("users/blog-details");
 });
 
-router.use("/blogs",function(req,res){
-    db.execute("select * from blog where confirmation = 1")
-    .then(blogResult =>{
-
-        db.execute("select * from category where active = 1")
-        .then(categoryResult => {
-            res.render("users/blogs", {
-                title: "Popüler Kurslar",
-                blogs: blogResult[0],
-                categories: categoryResult[0]
-            });
-        })
-        .catch(err => console.log(err));
-        
-    })
-    .catch(err => console.log(err));
+router.use("/blogs",async function(req,res){
+    try{
+        const [blogs,] = await db.execute("select * from blog where confirmation = 1");
+        const [categories,] = await db.execute("select * from category where active = 1");
+        res.render("users/blogs", {
+            title: "Bloglar",
+            blogs,
+            categories
+        });
+    }
+    catch(err){
+        console.log(err);
+    }
 });
 
-router.use("/",function(req,res){
-    db.execute("select * from blog where mainpage = 1 and confirmation = 1")
-    .then(blogResult =>{
-
-        db.execute("select * from category where active = 1")
-        .then(categoryResult => {
-            res.render("users/index", {
-                title: "Popüler Kurslar",
-                blogs: blogResult[0],
-                categories: categoryResult[0]
-            });
-        })
-        .catch(err => console.log(err));
-    })
-    .catch(err => console.log(err));
+router.use("/", async function(req,res){
+    try{
+        const [blogs,] = await db.execute("select * from blog where confirmation = 1");
+        const [categories,] = await db.execute("select * from category where active = 1");
+        res.render("users/index", {
+            title: "Popüler Bloglar",
+            blogs,
+            categories
+        });
+    }
+    catch(err){
+        console.log(err);
+    }
     
 });
 
