@@ -14,7 +14,7 @@ router.use("/blogs/:blogid",async function(req,res){
     const blogId = req.params.blogid;
     try{
         const [blog,] = await db.execute("select * from blog where blogid = ?",[blogId]);
-        if(blog[0] != undefined)
+        if(blog[0])
         {
             res.render("users/blog-details",{
                 blog: blog[0]
