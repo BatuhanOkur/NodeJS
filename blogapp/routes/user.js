@@ -10,8 +10,24 @@ const data = {
     categories: ["Web Geliştirme", "Programlama", "Mobil Uygulamalar", "Veri Analizi", "Otomasyon Uygulamaları"]
 }
 
-router.use("/blogs/:blogid",function(req,res){
-    res.render("users/blog-details");
+router.use("/blogs/:blogid",async function(req,res){
+    const blogId = req.params.blogid;
+    try{
+        const [blog,] = await db.execute("select * from blog where blogid = ?",[blogId]);
+        if(blog[0] != undefined)
+        {
+            res.render("users/blog-details",{
+                blog: blog[0]
+            });
+        }
+        else{
+            res.write("404 Not Found");
+            res.end();
+        }
+    }
+    catch(err){
+        console.log(err);
+    }
 });
 
 router.use("/blogs",async function(req,res){
