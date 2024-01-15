@@ -6,8 +6,7 @@ const db = require("../data/db");
 
 
 const data = {
-    title: "Popüler Kurslar",
-    categories: ["Web Geliştirme", "Programlama", "Mobil Uygulamalar", "Veri Analizi", "Otomasyon Uygulamaları"]
+    title: "Popüler Kurslar"
 }
 
 router.use("/blogs/category/:categoryid", async function(req,res){
@@ -21,7 +20,8 @@ router.use("/blogs/category/:categoryid", async function(req,res){
             res.render("users/blogs", {
                 title: "Bloglar",
                 blogs,
-                categories
+                categories,
+                selectedCategory: categoryId
             });
         }else{
             const [blogs,] = await db.execute(`
@@ -30,21 +30,14 @@ router.use("/blogs/category/:categoryid", async function(req,res){
                 LEFT JOIN blogcategory bc ON bc.blogid = b.blogid
                 WHERE b.confirmation = 1 AND categoryid = ?
                 `, [categoryId]);
-    
-            if(blogs.length > 0)
-            {
-                res.render("users/blogs", {
-                    title: "Bloglar",
-                    blogs,
-                    categories
-                });   
-            }else{
-                res.render("users/blogs", {
-                    title: "Bu kategoriye ait blog yazısı bulunmuyor.",
-                    blogs,
-                    categories
-                });   
-            }                 
+            
+            res.render("users/blogs", {
+                title: "Bloglar",
+                blogs,
+                categories,
+                selectedCategory: categoryId
+            });   
+                          
         }
 
         
@@ -82,7 +75,8 @@ router.use("/blogs",async function(req,res){
         res.render("users/blogs", {
             title: "Bloglar",
             blogs,
-            categories
+            categories,
+            selectedCategory: null
         });
     }
     catch(err){
@@ -97,7 +91,8 @@ router.use("/", async function(req,res){
         res.render("users/index", {
             title: "Popüler Bloglar",
             blogs,
-            categories
+            categories,
+            selectedCategory: null
         });
     }
     catch(err){
