@@ -12,11 +12,11 @@
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12 mt-3">
-                <form action="post">
+                <form action="" method="post">
                     <div class="row mb-3">
                         <label for="title" class="col-sm-2 col-form-label">Başlık</label>
                         <div class="col-sm-8">
-                            <input type="text" id="title" class="form-control">
+                            <input type="text" name="title" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -28,13 +28,13 @@
                     <div class="row mb-3">
                         <label for="image" class="col-sm-2 col-form-label">Resim</label>
                         <div class="col-sm-8">
-                            <input type="text" id="image" class="form-control">
+                            <input type="text" name="image" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="category" class="col-sm-2 col-form-label">Kategori</label>
                         <div class="col-sm-8">
-                            <select name="category" id="category" class="form-select">
+                            <select name="category" id="category" class="form-select" multiple>
                                 <option value="-1" selected>Seçiniz</option>
                                 <% categories.forEach(category => { %>
                                     <option value="<%= category.categoryid %>"><%= category.name %></option>
@@ -45,7 +45,7 @@
                     <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="confirmation">
+                            <input class="form-check-input" type="checkbox" name="confirmation">
                             <label class="form-check-label" for="confirmation">
                               Onay
                             </label>
@@ -55,7 +55,7 @@
                     <div class="row mb-3">
                         <div class="col-sm-10 offset-sm-2">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="mainpage">
+                            <input class="form-check-input" type="checkbox" name="mainpage">
                             <label class="form-check-label" for="mainpage">
                               Anasayfa
                             </label>
