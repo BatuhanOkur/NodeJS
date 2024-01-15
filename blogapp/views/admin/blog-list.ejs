@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
+    <title><%= title %></title>
 </head>
 <body>
-    admin blog list
+    <%- include('../partials/nav') %>
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">ID</th>
+                            <th style="width: 150px;">Resim</th>
+                            <th>Başlık</th>
+                            <th style="width: 130px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% blogs.forEach(blog => { %>
+                            <tr>
+                                <td><%= blog.blogid %></td>
+                                <td>
+                                    <img src="/static/images/<%= blog.image %>" class="img-fluid" alt="<%= blog.image %>">
+                                </td>
+                                <td><%= blog.title %></td>
+                                <td>
+                                    <a class="btn btn-sm btn-primary" href="/admin/blogs/<%= blog.blogid %>">Düzenle</a>
+                                    <a class="btn btn-sm btn-danger" href="/admin/blogs/<%= blog.blogid %>">Sil</a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
