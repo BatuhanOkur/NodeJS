@@ -1,16 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
+const db = require("../data/db");
 
-router.use("/blog/create",function(req,res){
-    res.render("admin/blog-create");
+router.get("/blog/create", async function(req,res){
+    const [categories,] = await db.execute("select * from category where active = 1");
+    res.render("admin/blog-create", {
+        title: 'Blog Ekle',
+        categories
+    });
 });
 
-router.use("/blogs/:blogid",function(req,res){
+router.get("/blogs/:blogid",function(req,res){
     res.render("admin/blog-edit");
 });
 
-router.use("/blogs",function(req,res){
+router.get("/blogs",function(req,res){
     res.render("admin/blog-list");
 });
 

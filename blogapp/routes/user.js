@@ -86,7 +86,7 @@ router.use("/blogs",async function(req,res){
 
 router.use("/", async function(req,res){
     try{
-        const [blogs,] = await db.execute("select * from blog where confirmation = 1");
+        const [blogs,] = await db.execute("select * from blog where confirmation = 1 and mainpage = 1");
         const [categories,] = await db.execute("select * from category where active = 1");
         res.render("users/index", {
             title: "Popüler Bloglar",
