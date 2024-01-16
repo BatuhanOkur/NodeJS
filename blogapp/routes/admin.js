@@ -2,10 +2,8 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const db = require("../data/db");
-const { error } = require("console");
-const util = require('util');
-const { title } = require("process");
-const dbQuery = util.promisify(db.query).bind(db);
+const imageUpload = require("../helpers/image-upload");
+
 
 router.get("/blog/delete/:blogid", async function(req,res){
     const blogid = req.params.blogid;
@@ -42,10 +40,11 @@ router.get("/blog/create", async function(req,res){
     });
 });
 
-router.post("/blog/create", async function(req,res){
+
+router.post("/blog/create",imageUpload.upload.single("image") ,async function(req,res){
     const title = req.body.title;
     const description = req.body.description;
-    const image = req.body.image;
+    const image = req.file.filename;
     const category = req.body.category;
     const mainpage = req.body.mainpage == "on" ? 1 : 0;
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
@@ -110,11 +109,14 @@ router.get("/blogs/:blogid",async function(req,res){
     
 });
 
-router.post("/blogs/:blogid",async function(req,res){
+router.post("/blogs/:blogid",imageUpload.upload.single("image"),async function(req,res){
     const blogid = req.params.blogid;
     const title = req.body.title;
     const description = req.body.description;
-    const image = req.body.image;
+    let image = req.body.image;
+    if(req.file){
+        image = req.file.filename;    
+    }
     const category = req.body.category;
     const mainpage = req.body.mainpage == "on" ? 1 : 0;
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
