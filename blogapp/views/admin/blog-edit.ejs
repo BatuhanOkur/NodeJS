@@ -3,9 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
+    <title><%= title %></title>
 </head>
 <body>
-    admin blog edit
+    <%- include('../partials/nav') %>
+
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <form action="" method="post">
+                    <div class="row mb-3">
+                        <label for="title" class="col-sm-2 col-form-label">Başlık</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="title" class="form-control" value="<%= blog.title %>">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="description" class="col-sm-2 col-form-label">Açıklama</label>
+                        <div class="col-sm-8">
+                            <textarea name="description" class="form-control" rows="10"><%= blog.description %></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="image" class="col-sm-2 col-form-label">Resim</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="image" class="form-control" value="<%= blog.image %>">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="category" class="col-sm-2 col-form-label">Kategori</label>
+                        <div class="col-sm-8">
+                            <select name="category" id="category" class="form-select" multiple>
+                                <option value="-1">Seçiniz</option>
+                                <% categories.forEach(category => { %>
+                                   <% if (relatedCategories.map(String).includes(category.categoryid.toString())) { %>
+                                        <option value="<%= category.categoryid %>" selected><%= category.name %></option>
+                                    <% } else { %>
+                                        <option value="<%= category.categoryid %>"><%= category.name %></option>
+                                   <% } %>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="confirmation" <%= blog.confirmation ? "checked" : "" %>>
+                            <label class="form-check-label" for="confirmation">
+                              Onay
+                            </label>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="mainpage" <%= blog.mainpage ? "checked" : "" %>>
+                            <label class="form-check-label" for="mainpage">
+                              Anasayfa
+                            </label>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-8 offset-sm-2">
+                            <button type="submit" class="btn btn-primary">Kaydet</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
