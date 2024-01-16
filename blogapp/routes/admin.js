@@ -7,6 +7,33 @@ const util = require('util');
 const { title } = require("process");
 const dbQuery = util.promisify(db.query).bind(db);
 
+router.get("/blog/delete/:blogid", async function(req,res){
+    const blogid = req.params.blogid;
+
+    try{
+        const [blogs,] = await db.execute("select blogid, title from blog where blogid = ?", [blogid]);
+        const blog = blogs[0];
+        res.render("admin/blog-delete",{
+            title: "Bloğu Sil",
+            blog
+        });
+    }catch(error){
+        console.log(error);
+    }
+});
+
+router.post("/blog/delete/:blogid", async function(req,res){
+    const blogid = req.body.blogid;
+
+    try{
+        await db.execute("delete from blogcategory where blogid = ?", [blogid]);
+        await db.execute("delete from blog where blogid = ?", [blogid]);
+        res.redirect("/admin/blogs");
+    }catch(error){
+        console.log(error);
+    }
+});
+
 router.get("/blog/create", async function(req,res){
     const [categories,] = await db.execute("select * from category where active = 1");
     res.render("admin/blog-create", {
