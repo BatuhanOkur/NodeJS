@@ -159,6 +159,33 @@ router.get("/blogs",async function(req,res){
     }
 });
 
+router.get("/category/delete/:categoryid", async function(req,res){
+    const categoryid = req.params.categoryid;
+
+    try{
+        const [categories,] = await db.execute("select * from category where categoryid = ?", [categoryid]);
+        const category = categories[0];
+        res.render("admin/category-delete",{
+            title: "Kategoriyi Sil",
+            category
+        });
+    }catch(error){
+        console.log(error);
+    }
+});
+
+router.post("/category/delete/:categoryid", async function(req,res){
+    const categoryid = req.body.categoryid;
+
+    try{
+        await db.execute("delete from blogcategory where categoryid = ?", [categoryid]);
+        await db.execute("delete from category where categoryid = ?", [categoryid]);
+        res.redirect("/admin/categories?action=delete");
+    }catch(error){
+        console.log(error);
+    }
+});
+
 
 router.get("/category/create", async function(req,res){
     res.render("admin/category-create", {
