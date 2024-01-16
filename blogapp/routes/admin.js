@@ -160,6 +160,57 @@ router.get("/blogs",async function(req,res){
 });
 
 
+router.get("/category/create", async function(req,res){
+    res.render("admin/category-create", {
+        title: 'Kategori Ekle'
+    });
+});
+
+router.post("/category/create", async function(req,res){
+    const name = req.body.name;
+    const active = req.body.active == "on" ? 1 : 0;
+    
+    try {
+        await db.execute(
+            `INSERT INTO category(name, active) VALUES (?, ?)`,
+            [name, active]
+        );
+
+        res.redirect("/admin/categories?action=create");
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get("/categories/:categoryid", async function(req,res){
+    const categoryid = req.params.categoryid;
+    try {
+        const [categories,] = await db.execute("select * from category where categoryid = ?", [categoryid]);
+        const category = categories[0];
+        res.render("admin/category-edit", {
+            title: 'Kategori Ekle',
+            category
+        });
+    } catch (error) {
+        console.log(error);
+    }
+    
+});
+
+router.post("/categories/:categoryid", async function(req,res){
+    const categoryid = req.params.categoryid;
+    const name = req.body.name;
+    const active = req.body.active == "on" ? 1 : 0;
+
+    try {
+        await db.execute("update category set name=?, active=? where categoryid = ?", [name,active,categoryid]);
+        res.redirect("/admin/categories?action=edit");
+    } catch (error) {
+        console.log(error);
+    }
+    
+});
+
 router.get("/categories",async function(req,res){
     try {
         const [categories,] = await db.execute("select * from category");
@@ -172,6 +223,8 @@ router.get("/categories",async function(req,res){
         console.log(error);
     }
 });
+
+
 
 
 module.exports = router;
