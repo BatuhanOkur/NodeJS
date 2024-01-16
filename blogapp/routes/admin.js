@@ -72,6 +72,42 @@ router.get("/blogs/:blogid",async function(req,res){
     
 });
 
+router.post("/blogs/:blogid",async function(req,res){
+    const blogid = req.params.blogid;
+    const title = req.body.title;
+    const description = req.body.description;
+    const image = req.body.image;
+    const category = req.body.category;
+    const mainpage = req.body.mainpage == "on" ? 1 : 0;
+    const confirmation = req.body.confirmation == "on" ? 1 : 0;
+
+    try {
+        await db.execute(`
+        update blog 
+        set title = ?, 
+        description = ?,
+        image = ?,
+        mainpage = ?,
+        confirmation = ?
+        where blogid = ?
+        `, [title,description,image,mainpage,confirmation,blogid]);
+
+        await db.execute("delete from blogcategory where blogid = ?", [blogid]);
+
+        category.forEach(async element => {
+            await db.execute(
+                `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
+                [element, blogid]
+              );
+        });
+
+        res.redirect("/admin/blogs");
+
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get("/blogs",async function(req,res){
     try {
         const [blogs,] = await db.execute("select blogid, title, image from blog");
