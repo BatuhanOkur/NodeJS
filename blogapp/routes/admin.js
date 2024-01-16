@@ -28,7 +28,7 @@ router.post("/blog/delete/:blogid", async function(req,res){
     try{
         await db.execute("delete from blogcategory where blogid = ?", [blogid]);
         await db.execute("delete from blog where blogid = ?", [blogid]);
-        res.redirect("/admin/blogs");
+        res.redirect("/admin/blogs?action=delete");
     }catch(error){
         console.log(error);
     }
@@ -58,14 +58,25 @@ router.post("/blog/create", async function(req,res){
     
         if(results.insertId)
         {
-            category.forEach(async element => {
-                await db.execute(
-                    `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
-                    [element, results.insertId]
-                  );
-            });    
+            if(category != -1){
+                if(category.length > 1){
+
+                    category.forEach(async element => {
+                        await db.execute(
+                            `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
+                            [element, results.insertId]
+                          );
+                    }); 
+
+                }else{
+                    await db.execute(
+                        `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
+                        [category, results.insertId]
+                      );
+                }
+            }  
         }
-        res.redirect("/admin/blogs");
+        res.redirect("/admin/blogs?action=create");
     } catch (error) {
         console.log(error);
     }
@@ -128,7 +139,7 @@ router.post("/blogs/:blogid",async function(req,res){
               );
         });
 
-        res.redirect("/admin/blogs");
+        res.redirect("/admin/blogs?action=edit");
 
     } catch (error) {
         console.log(error);
@@ -140,7 +151,22 @@ router.get("/blogs",async function(req,res){
         const [blogs,] = await db.execute("select blogid, title, image from blog");
         res.render("admin/blog-list",{
             title: "Blog Listesi",
-            blogs
+            blogs,
+            action: req.query.action
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+
+router.get("/category",async function(req,res){
+    try {
+        const [blogs,] = await db.execute("select * from category");
+        res.render("admin/blog-list",{
+            title: "Kategori Listesi",
+            blogs,
+            action: req.query.action
         });
     } catch (error) {
         console.log(error);
