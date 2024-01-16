@@ -160,12 +160,12 @@ router.get("/blogs",async function(req,res){
 });
 
 
-router.get("/category",async function(req,res){
+router.get("/categories",async function(req,res){
     try {
-        const [blogs,] = await db.execute("select * from category");
-        res.render("admin/blog-list",{
+        const [categories,] = await db.execute("select * from category");
+        res.render("admin/category-list",{
             title: "Kategori Listesi",
-            blogs,
+            categories,
             action: req.query.action
         });
     } catch (error) {
