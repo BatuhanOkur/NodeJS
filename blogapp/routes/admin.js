@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require("path");
 const db = require("../data/db");
 const imageUpload = require("../helpers/image-upload");
+const fs = require("fs");
 
 
 router.get("/blog/delete/:blogid", async function(req,res){
@@ -115,7 +116,10 @@ router.post("/blogs/:blogid",imageUpload.upload.single("image"),async function(r
     const description = req.body.description;
     let image = req.body.image;
     if(req.file){
-        image = req.file.filename;    
+        image = req.file.filename;   
+        fs.unlink("./public/images/" + req.body.image, err => {
+            console.log(err);
+        });
     }
     const category = req.body.category;
     const mainpage = req.body.mainpage == "on" ? 1 : 0;
