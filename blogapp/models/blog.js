@@ -31,12 +31,25 @@ const Blog = sequelize.define("blog", {
     confirmation:{
         type: DataTypes.BOOLEAN,
         allowNull: false
-    },
-
-    createDate:{
-        type: DataTypes.DATETIME,
-        defaultValue: DataTypes.NOW
     }
 });
+
+async function sync(){
+    await Blog.sync({force: true});
+    console.log("Blog table added");
+
+    const blog = await Blog.create({
+        title: ".Net Core İle Web Geliştirme",
+        description: ".Net Core ve MSSQL teknolojileriyle web geliştirmeyi öğrenmek için kursa hemen kaydol!",
+        image: "1.jpeg",
+        mainpage:true,
+        confirmation: true      
+    });
+
+    console.log("Blog Created: ID ",blog.blogid);
+}
+
+sync();
+
 
 module.exports = Blog;
