@@ -35,18 +35,18 @@ const Blog = sequelize.define("blog", {
 });
 
 async function sync(){
-    await Blog.sync({force: true});
-    console.log("Blog table added");
+    // await Blog.sync({force: true});
+    // console.log("Blog table added");
 
-    const blog = await Blog.create({
-        title: ".Net Core İle Web Geliştirme",
-        description: ".Net Core ve MSSQL teknolojileriyle web geliştirmeyi öğrenmek için kursa hemen kaydol!",
-        image: "1.jpeg",
-        mainpage:true,
-        confirmation: true      
-    });
+    // const blog = await Blog.create({
+    //     title: ".Net Core İle Web Geliştirme",
+    //     description: ".Net Core ve MSSQL teknolojileriyle web geliştirmeyi öğrenmek için kursa hemen kaydol!",
+    //     image: "1.jpeg",
+    //     mainpage:true,
+    //     confirmation: true      
+    // });
 
-    console.log("Blog Created: ID ",blog.blogid);
+    // console.log("Blog Created: ID ",blog.blogid);
 }
 
 sync();

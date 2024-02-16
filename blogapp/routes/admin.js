@@ -5,6 +5,10 @@ const db = require("../data/db");
 const imageUpload = require("../helpers/image-upload");
 const fs = require("fs");
 
+const Blog = require("../models/blog");
+const Category = require("../models/category");
+const BlogCategory = require("../models/blogcategory");
+
 
 router.get("/blog/delete/:blogid", async function(req,res){
     const blogid = req.params.blogid;
@@ -204,10 +208,7 @@ router.post("/category/create", async function(req,res){
     const active = req.body.active == "on" ? 1 : 0;
     
     try {
-        await db.execute(
-            `INSERT INTO category(name, active) VALUES (?, ?)`,
-            [name, active]
-        );
+        await Category.create({name: name, active: active});
 
         res.redirect("/admin/categories?action=create");
     } catch (error) {

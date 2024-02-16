@@ -21,17 +21,17 @@ const Category = sequelize.define("category", {
 });
 
 async function sync(){
-    await Category.sync({force: true});
-    console.log("Category table added");
+    // await Category.sync({force: true});
+    // console.log("Category table added");
 
-    await Category.bulkCreate([
+    // await Category.bulkCreate([
         
-        {name: "Web Geliştirme", active: true},
-        {name: "Programlama", active: true},
-        {name: "Veri Bilimi", active: true},
-        {name: "Veri Analizi", active: false}
-    ]
-    )
+    //     {name: "Web Geliştirme", active: true},
+    //     {name: "Programlama", active: true},
+    //     {name: "Veri Bilimi", active: true},
+    //     {name: "Veri Analizi", active: false}
+    // ]
+    // )
 }
 
 sync();
