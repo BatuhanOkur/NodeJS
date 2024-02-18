@@ -4,7 +4,6 @@ const path = require("path");
 const db = require("../data/db");
 const Blog = require("../models/blog");
 const Category = require("../models/category");
-const BlogCategory = require("../models/blogcategory");
 const { where } = require("sequelize");
 
 

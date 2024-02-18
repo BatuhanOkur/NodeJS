@@ -7,7 +7,6 @@ const fs = require("fs");
 
 const Blog = require("../models/blog");
 const Category = require("../models/category");
-const BlogCategory = require("../models/blogcategory");
 const { where } = require("sequelize");
 
 
@@ -30,9 +29,14 @@ router.post("/blog/delete/:blogid", async function(req,res){
     const blogid = req.body.blogid;
 
     try{
-        await db.execute("delete from blogcategory where blogid = ?", [blogid]);
-        await db.execute("delete from blog where blogid = ?", [blogid]);
-        res.redirect("/admin/blogs?action=delete");
+        const blog = await Blog.findByPk(blogid);
+        if(blog.hasCategories())
+        {
+            console.log("var");
+        }
+        //await blog.destroy();
+        //res.redirect("/admin/blogs?action=delete");
+        res.end();
     }catch(error){
         console.log(error);
     }
