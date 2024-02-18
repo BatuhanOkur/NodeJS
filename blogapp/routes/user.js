@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const db = require("../data/db");
-
+const Blog = require("../models/blog");
+const Category = require("../models/category");
+const BlogCategory = require("../models/blogcategory");
+const { where } = require("sequelize");
 
 
 const data = {
@@ -12,11 +15,22 @@ const data = {
 router.use("/blogs/category/:categoryid", async function(req,res){
     const categoryId = req.params.categoryid;
     try{
-        const [categories,] = await db.execute("select * from category where active = 1");
+        const categories = await Category.findAll({
+            where:{
+                active: 1
+            }
+        });  
 
         if(categoryId === "all")
         {
-            const [blogs,] = await db.execute("select * from blog where confirmation = 1");
+            const blogs = await Blog.findAll(
+                {
+                    where:{
+                        confirmation:1
+                    }
+                }
+            );
+
             res.render("users/blogs", {
                 title: "Bloglar",
                 blogs,
@@ -24,38 +38,34 @@ router.use("/blogs/category/:categoryid", async function(req,res){
                 selectedCategory: categoryId
             });
         }else{
-            const [blogs,] = await db.execute(`
-                SELECT *
-                FROM blog b
-                LEFT JOIN blogcategory bc ON bc.blogid = b.blogid
-                WHERE b.confirmation = 1 AND categoryid = ?
-                `, [categoryId]);
-            
+            const category = await Category.findByPk(categoryId);
+            const blogs = await category.getBlogs();
+                          
             res.render("users/blogs", {
                 title: "Bloglar",
                 blogs,
                 categories,
                 selectedCategory: categoryId
             });   
-                          
         }
 
         
     }
     catch(err)
     {
-
+        console.log(err);
     }
 });
 
 router.use("/blogs/:blogid",async function(req,res){
     const blogId = req.params.blogid;
     try{
-        const [blog,] = await db.execute("select * from blog where blogid = ?",[blogId]);
-        if(blog[0])
+        const blog = await Blog.findByPk(blogId);
+
+        if(blog)
         {
             res.render("users/blog-details",{
-                blog: blog[0]
+                blog
             });
         }
         else{
@@ -70,8 +80,21 @@ router.use("/blogs/:blogid",async function(req,res){
 
 router.use("/blogs",async function(req,res){
     try{
-        const [blogs,] = await db.execute("select * from blog where confirmation = 1");
-        const [categories,] = await db.execute("select * from category where active = 1");
+        
+        const blogs = await Blog.findAll(
+            {
+                where:{
+                    confirmation:1
+                }
+            }
+        );
+        
+        const categories = await Category.findAll({
+            where:{
+                active: 1
+            }
+        });    
+
         res.render("users/blogs", {
             title: "Bloglar",
             blogs,
@@ -85,9 +108,22 @@ router.use("/blogs",async function(req,res){
 });
 
 router.use("/", async function(req,res){
-    try{
-        const [blogs,] = await db.execute("select * from blog where confirmation = 1 and mainpage = 1");
-        const [categories,] = await db.execute("select * from category where active = 1");
+    try{      
+        const blogs = await Blog.findAll(
+            {
+                where:{
+                    confirmation:1,
+                    mainpage: 1
+                }
+            }
+        );
+
+        const categories = await Category.findAll({
+            where:{
+                active: 1
+            }
+        });
+
         res.render("users/index", {
             title: "Popüler Bloglar",
             blogs,
