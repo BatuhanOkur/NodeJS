@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/libs/bootstrap/dist/css/bootstrap.min.css">
-    <title><%= title %></title>
+    <%- include('../partials/head') %>
 </head>
 <body>
     <%- include('../partials/nav') %>
@@ -22,7 +19,7 @@
                     <div class="row mb-3">
                         <label for="description" class="col-sm-2 col-form-label">Açıklama</label>
                         <div class="col-sm-8">
-                            <textarea name="description" class="form-control" rows="10"></textarea>
+                            <textarea id="editor" name="description" class="form-control" rows="10"></textarea>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -36,9 +33,8 @@
                         <div class="col-sm-8">
                             <select name="category" id="category" class="form-select" multiple>
                                 <option value="-1" selected>Seçiniz</option>
-                                <% categories.forEach(category => { %>
-                                    <option value="<%= category.categoryid %>"><%= category.name %></option>
-                                <% }) %>
+                                <option value="1" selected>Oyun Geliştirme</option>
+                               
                             </select>
                         </div>
                     </div>
@@ -71,5 +67,14 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+    
 </body>
 </html>
