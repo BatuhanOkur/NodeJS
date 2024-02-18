@@ -38,10 +38,10 @@ router.post("/blog/delete/:blogid", async function(req,res){
 });
 
 router.get("/blog/create", async function(req,res){
-    const [categories,] = await db.execute("select * from category where active = 1");
+    //const [categories,] = await db.execute("select * from category where active = 1");
     res.render("admin/blog-create", {
         title: 'Blog Ekle',
-        categories
+        //categories
     });
 });
 
@@ -49,41 +49,41 @@ router.get("/blog/create", async function(req,res){
 router.post("/blog/create",imageUpload.upload.single("image") ,async function(req,res){
     const title = req.body.title;
     const description = req.body.description;
-    const image = req.file.filename;
+    let image = req.body.image;
+    if(req.file){
+        image = req.file.filename;
+    }
     const category = req.body.category;
     const mainpage = req.body.mainpage == "on" ? 1 : 0;
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
     
     try {
-        const [results] = await db.execute(
-            `INSERT INTO blog(title, description, image, mainpage, confirmation) VALUES (?, ?, ?, ?, ?)`,
-            [title, description, image, mainpage, confirmation]
-          );
-    
-        if(results.insertId)
-        {
-            if(category != -1){
-                if(category.length > 1){
+            const blog = await Blog.create({
+                title: title,
+                description: description,
+                image: image,
+                mainpage:mainpage,
+                confirmation: confirmation      
+            });
+        
+            if(blog.blogid)
+            {
+                if(category != -1){
+                    if(category.length > 1){
 
-                    category.forEach(async element => {
-                        await db.execute(
-                            `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
-                            [element, results.insertId]
-                          );
-                    }); 
+                        category.forEach(async element => {                                               
+                            await BlogCategory.create({categoryid: element, blogid: blog.blogid});                        
+                        }); 
 
-                }else{
-                    await db.execute(
-                        `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
-                        [category, results.insertId]
-                      );
-                }
-            }  
+                    }else{                  
+                        await BlogCategory.create({categoryid: category, blogid: blog.blogid});
+                    }
+                }  
+            }
+            res.redirect("/admin/blogs?action=create");
+        } catch (error) {
+            console.log(error);
         }
-        res.redirect("/admin/blogs?action=create");
-    } catch (error) {
-        console.log(error);
-    }
 });
 
 router.get("/blogs/:blogid",async function(req,res){
@@ -247,7 +247,8 @@ router.post("/categories/:categoryid", async function(req,res){
 
 router.get("/categories",async function(req,res){
     try {
-        const [categories,] = await db.execute("select * from category");
+        const categories = await Category.findAll();
+        console.log(categories);
         res.render("admin/category-list",{
             title: "Kategori Listesi",
             categories,
