@@ -20,7 +20,7 @@ const Blog = sequelize.define("blog", {
 
     image:{
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
 
     mainpage:{
@@ -35,8 +35,8 @@ const Blog = sequelize.define("blog", {
 });
 
 async function sync(){
-    // await Blog.sync({force: true});
-    // console.log("Blog table added");
+    await Blog.sync({force: true});
+    console.log("Blog table added");
 
     // const blog = await Blog.create({
     //     title: ".Net Core İle Web Geliştirme",
@@ -49,7 +49,7 @@ async function sync(){
     // console.log("Blog Created: ID ",blog.blogid);
 }
 
-sync();
+// sync();
 
 
 module.exports = Blog;

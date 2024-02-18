@@ -24,10 +24,10 @@ Category.belongsToMany(Blog, {
     otherKey: 'blogid'
 });
 
-// async function sync(){
-//     await BlogCategory.sync({force: true});
-//     console.log("BlogCategory table added");
-// }
+async function sync(){
+    await BlogCategory.sync({force: true});
+    console.log("BlogCategory table added");
+}
 
 // sync();
 

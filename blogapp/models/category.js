@@ -21,8 +21,8 @@ const Category = sequelize.define("category", {
 });
 
 async function sync(){
-    // await Category.sync({force: true});
-    // console.log("Category table added");
+    await Category.sync({force: true});
+    console.log("Category table added");
 
     // await Category.bulkCreate([
         
@@ -34,7 +34,7 @@ async function sync(){
     // )
 }
 
-sync();
+// sync();
 
 
 module.exports = Category;
