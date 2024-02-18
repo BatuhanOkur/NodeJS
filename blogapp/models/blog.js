@@ -49,7 +49,7 @@ async function sync(){
     // console.log("Blog Created: ID ",blog.blogid);
 }
 
-// sync();
+//sync();
 
 
 module.exports = Blog;

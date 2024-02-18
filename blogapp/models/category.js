@@ -34,7 +34,7 @@ async function sync(){
     // )
 }
 
-// sync();
+//sync();
 
 
 module.exports = Category;

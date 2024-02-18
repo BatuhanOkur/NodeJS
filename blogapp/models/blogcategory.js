@@ -9,19 +9,15 @@ const BlogCategory = sequelize.define("blogcategory", {
         autoIncrement: true,
         allowNull: false,
         primaryKey:  true
-    },
+    }
 });
 
 Blog.belongsToMany(Category, {
-    through: 'blogcategory',
-    foreignKey: 'blogid',
-    otherKey: 'categoryid'
+    through: 'blogcategory'
 });
 
 Category.belongsToMany(Blog, {
-    through: 'blogcategory',
-    foreignKey: 'categoryid',
-    otherKey: 'blogid'
+    through: 'blogcategory'
 });
 
 async function sync(){
@@ -29,6 +25,6 @@ async function sync(){
     console.log("BlogCategory table added");
 }
 
-// sync();
+//sync();
 
 module.exports = BlogCategory;
