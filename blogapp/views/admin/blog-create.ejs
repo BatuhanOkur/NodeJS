@@ -33,8 +33,9 @@
                         <div class="col-sm-8">
                             <select name="category" id="category" class="form-select" multiple>
                                 <option value="-1" selected>Seçiniz</option>
-                                <option value="1" selected>Oyun Geliştirme</option>
-                               
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.dataValues.categoryid %>"><%= category.dataValues.name %></option>
+                                 <% }) %>
                             </select>
                         </div>
                     </div>

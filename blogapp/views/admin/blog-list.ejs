@@ -39,14 +39,14 @@
                     <tbody>
                         <% blogs.forEach(blog => { %>
                             <tr>
-                                <td><%= blog.blogid %></td>
+                                <td><%= blog.dataValues.blogid %></td>
                                 <td>
-                                    <img src="/static/images/<%= blog.image %>" class="img-fluid" alt="<%= blog.image %>">
+                                    <img src="/static/images/<%= blog.dataValues.image %>" class="img-fluid" alt="<%= blog.dataValues.image %>">
                                 </td>
-                                <td><%= blog.title %></td>
+                                <td><%= blog.dataValues.title %></td>
                                 <td>
-                                    <a class="btn btn-sm btn-primary" href="/admin/blogs/<%= blog.blogid %>">Düzenle</a>
-                                    <a class="btn btn-sm btn-danger" href="/admin/blog/delete/<%= blog.blogid %>">Sil</a>
+                                    <a class="btn btn-sm btn-primary" href="/admin/blogs/<%= blog.dataValues.blogid %>">Düzenle</a>
+                                    <a class="btn btn-sm btn-danger" href="/admin/blog/delete/<%= blog.dataValues.blogid %>">Sil</a>
                                 </td>
                             </tr>
                         <% }) %>

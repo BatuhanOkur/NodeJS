@@ -36,10 +36,10 @@
                             <select name="category" id="category" class="form-select" multiple>
                                 <option value="-1">Seçiniz</option>
                                 <% categories.forEach(category => { %>
-                                   <% if (relatedCategories.map(String).includes(category.categoryid.toString())) { %>
-                                        <option value="<%= category.categoryid %>" selected><%= category.name %></option>
+                                   <% if (relatedCategories.map(String).includes(category.dataValues.categoryid.toString())) { %>
+                                        <option value="<%= category.dataValues.categoryid %>" selected><%= category.dataValues.name %></option>
                                     <% } else { %>
-                                        <option value="<%= category.categoryid %>"><%= category.name %></option>
+                                        <option value="<%= category.dataValues.categoryid %>"><%= category.dataValues.name %></option>
                                    <% } %>
                                 <% }) %>
                             </select>

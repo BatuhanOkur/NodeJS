@@ -14,10 +14,10 @@
             <div class="col-md-12 mt-3">
                 <div class="alert alert-secondary">
                     <p class="mb-3">
-                        <b><%= blog.title %></b> <br> isimli blog kaydını silmek istiyor musunuz?
+                        <b><%= blog.dataValues.title %></b> <br> isimli blog kaydını silmek istiyor musunuz?
                     </p>
                     <form action="" method="post">
-                        <input type="hidden" name="blogid" value="<%= blog.blogid %>">
+                        <input type="hidden" name="blogid" value="<%= blog.dataValues.blogid %>">
                         <button class="btn btn-danger" type="submit">Evet</button>
                         <a href="/admin/blogs" class="btn btn-primary">Vazgeç</a>
                     </form>
