@@ -78,11 +78,14 @@ router.post("/blog/create",imageUpload.upload.single("image") ,async function(re
                     if(category.length > 1){
 
                         category.forEach(async element => {                                               
-                            await BlogCategory.create({categoryid: element, blogid: blog.blogid});                        
+                            //await BlogCategory.create({categoryid: element, blogid: blog.blogid});    
+                            let categoryItem = await Category.findByPk(element); 
+                            await blog.addCategory(categoryItem);                    
                         }); 
 
                     }else{                  
-                        await BlogCategory.create({categoryid: category, blogid: blog.blogid});
+                        let categoryItem = await Category.findByPk(category); 
+                        await blog.addCategory(categoryItem);      
                     }
                 }  
             }
