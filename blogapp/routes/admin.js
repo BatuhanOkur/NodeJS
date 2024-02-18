@@ -8,14 +8,15 @@ const fs = require("fs");
 const Blog = require("../models/blog");
 const Category = require("../models/category");
 const BlogCategory = require("../models/blogcategory");
+const { where } = require("sequelize");
 
 
 router.get("/blog/delete/:blogid", async function(req,res){
     const blogid = req.params.blogid;
 
     try{
-        const [blogs,] = await db.execute("select blogid, title from blog where blogid = ?", [blogid]);
-        const blog = blogs[0];
+        const blog = await Blog.findByPk(blogid);
+
         res.render("admin/blog-delete",{
             title: "Bloğu Sil",
             blog
@@ -38,10 +39,15 @@ router.post("/blog/delete/:blogid", async function(req,res){
 });
 
 router.get("/blog/create", async function(req,res){
-    //const [categories,] = await db.execute("select * from category where active = 1");
+    
+    const categories = await Category.findAll({
+        where: {
+            active:1
+        }
+    });
     res.render("admin/blog-create", {
         title: 'Blog Ekle',
-        //categories
+        categories
     });
 });
 
@@ -89,18 +95,33 @@ router.post("/blog/create",imageUpload.upload.single("image") ,async function(re
 router.get("/blogs/:blogid",async function(req,res){
     const blogId = req.params.blogid;
     try{
-        const [blogs,] = await db.execute("select * from blog where blogid = ?", [blogId]); 
-        const [categories,] = await db.execute("select * from category where active = 1");
-        const [blogcategories,] = await db.execute("select categoryid from blogcategory where blogid = ?", [blogId]);
+        const blog = await Blog.findByPk(blogId);
+
+        const categories = await Category.findAll({
+            where: {
+                active:1
+            }
+        });
+
+        const blogcategories = await BlogCategory.findAll({
+            attributes: ["categoryid"],
+            where: {
+                blogid:blogId
+            }
+        });
+
+
         const relatedCategories = [];
         blogcategories.forEach(element => {
-            relatedCategories.push(element.categoryid);
+            relatedCategories.push(element.dataValues.categoryid);
         })
+
+        console.log(relatedCategories);
         
-        if(blogs){
+        if(blog){
             res.render("admin/blog-edit",{
                 title: "Bloğu düzenle",
-                blog: blogs[0],
+                blog,
                 categories,
                 relatedCategories
             });
@@ -158,7 +179,11 @@ router.post("/blogs/:blogid",imageUpload.upload.single("image"),async function(r
 
 router.get("/blogs",async function(req,res){
     try {
-        const [blogs,] = await db.execute("select blogid, title, image from blog");
+        const blogs = await Blog.findAll(
+            {
+                attributes:["blogid", "title", "image"]
+            }
+        );
         res.render("admin/blog-list",{
             title: "Blog Listesi",
             blogs,
@@ -173,8 +198,7 @@ router.get("/category/delete/:categoryid", async function(req,res){
     const categoryid = req.params.categoryid;
 
     try{
-        const [categories,] = await db.execute("select * from category where categoryid = ?", [categoryid]);
-        const category = categories[0];
+        const category = await Category.findByPk(categoryid);
         res.render("admin/category-delete",{
             title: "Kategoriyi Sil",
             category
@@ -219,12 +243,13 @@ router.post("/category/create", async function(req,res){
 router.get("/categories/:categoryid", async function(req,res){
     const categoryid = req.params.categoryid;
     try {
-        const [categories,] = await db.execute("select * from category where categoryid = ?", [categoryid]);
-        const category = categories[0];
-        res.render("admin/category-edit", {
-            title: 'Kategori Ekle',
-            category
-        });
+        const category = await Category.findByPk(categoryid);
+        if(category){
+            res.render("admin/category-edit", {
+                title: 'Kategori Ekle',
+                category
+            });
+        }
     } catch (error) {
         console.log(error);
     }
@@ -248,7 +273,7 @@ router.post("/categories/:categoryid", async function(req,res){
 router.get("/categories",async function(req,res){
     try {
         const categories = await Category.findAll();
-        console.log(categories);
+
         res.render("admin/category-list",{
             title: "Kategori Listesi",
             categories,
