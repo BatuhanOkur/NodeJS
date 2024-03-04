@@ -33,7 +33,7 @@
                     <div class="row mb-3">
                         <label for="category" class="col-sm-2 col-form-label">Kategori</label>
                         <div class="col-sm-8">
-                            <select name="category" id="category" class="form-select" multiple>
+                            <select name="category[]" id="category" class="form-select" multiple>
                                 <option value="-1">Seçiniz</option>
                                 <% categories.forEach(category => { %>
                                     <option value="<%= category.dataValues.categoryid %>" 

@@ -58,17 +58,22 @@ exports.CreateBlog = async function(req,res){
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
     
     try {
-            
-            if(category != -1){
+            const blog = await Blog.create({
+                title: title,
+                description: description,
+                image: image,
+                mainpage:mainpage,
+                confirmation: confirmation      
+            });
+
+            if(category){
+                let index = category.indexOf('-1');
+                if(index !== -1)
+                {
+                    category.splice(index, 1)
+                }
+
                 if(category.length > 1){
-                    
-                    const blog = await Blog.create({
-                        title: title,
-                        description: description,
-                        image: image,
-                        mainpage:mainpage,
-                        confirmation: confirmation      
-                    });
 
                     category.forEach(async element => {                                               
                         //await BlogCategory.create({categoryid: element, blogid: blog.blogid});    
@@ -77,17 +82,6 @@ exports.CreateBlog = async function(req,res){
                     }); 
                     res.redirect("/admin/blogs?action=create");
 
-                }else{                  
-                    let categoryItem = await Category.findByPk(category); 
-                    categoryItem.createBlog({
-                        title: title,
-                        description: description,
-                        image: image,
-                        mainpage:mainpage,
-                        confirmation: confirmation      
-                    });      
-
-                    res.redirect("/admin/blogs?action=create");
                 }
             }  
             res.redirect("/admin/blogs");
@@ -143,11 +137,21 @@ exports.EditBlog = async function(req,res){
             console.log(err);
         });
     }
-    const category = req.body.category;
+    let category = req.body.category;
     const mainpage = req.body.mainpage == "on" ? 1 : 0;
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
 
     try {
+
+        if(category){
+            let index = category.indexOf('-1');
+            if(index !== -1)
+            {
+                category.splice(index, 1)
+            }
+        }else{
+            category = [];
+        }
 
         const blog = await Blog.findByPk(blogid);
         if(blog){
