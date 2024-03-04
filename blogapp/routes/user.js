@@ -8,6 +8,6 @@ router.use("/blogs/:blogid", userController.ShowBlogDetail);
 
 router.use("/blogs", userController.ShowAllBlogs);
 
-router.use("/", userController.ShowPopularBlogs);
+router.use("/", userController.Index);
 
 module.exports = router;
