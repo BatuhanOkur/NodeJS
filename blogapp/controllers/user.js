@@ -1,9 +1,10 @@
+const { raw } = require("express");
 const Blog = require("../models/blog");
 const Category = require("../models/category");
 const { where } = require("sequelize");
 
 exports.ShowBlogsByCategory = async function(req,res){
-    const categoryId = req.params.categoryid;
+    const slug = req.params.slug;
     try{
         const categories = await Category.findAll({
             where:{
@@ -11,7 +12,7 @@ exports.ShowBlogsByCategory = async function(req,res){
             }
         });  
 
-        if(categoryId === "all")
+        if(slug === "all")
         {
             const blogs = await Blog.findAll(
                 {
@@ -25,20 +26,27 @@ exports.ShowBlogsByCategory = async function(req,res){
                 title: "Bloglar",
                 blogs,
                 categories,
-                selectedCategory: categoryId
+                selectedCategory: slug
             });
         }else{
-            const category = await Category.findByPk(categoryId);
-            if(category){
-                const blogs = await category.getBlogs();
+            
+            const blogs = await Blog.findAll({
+                where: {
+                    confirmation: true
+                },
+                include:{
+                    model: Category,
+                    where:{url: slug}
+                }
+            });
                           
-                res.render("users/blogs", {
-                    title: "Bloglar",
-                    blogs,
-                    categories,
-                    selectedCategory: categoryId
-                });   
-            }
+            res.render("users/blogs", {
+                title: "Bloglar",
+                blogs,
+                categories,
+                selectedCategory: slug
+            });   
+            
         }
 
         
@@ -50,9 +58,14 @@ exports.ShowBlogsByCategory = async function(req,res){
 }
 
 exports.ShowBlogDetail = async function(req,res){
-    const blogId = req.params.blogid;
+    const slug = req.params.slug;
     try{
-        const blog = await Blog.findByPk(blogId);
+        const blog = await Blog.findOne({
+                where:{
+                    url: slug
+                },
+                raw: true
+            });
 
         if(blog)
         {
@@ -117,10 +130,10 @@ exports.Index = async function(req,res){
         });
 
         res.render("users/index", {
-            title: "Popüler Bloglar",
+            title: "Bloglar",
             blogs,
             categories,
-            selectedCategory: null
+            selectedCategory: "all"
         });
     }
     catch(err){

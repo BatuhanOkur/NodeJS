@@ -1,6 +1,7 @@
 const Blog = require("../models/blog");
 const Category = require("../models/category");
 const { where } = require("sequelize");
+const slugfield = require("../helpers/slugfield");
 
 exports.ShowBlogDeletePage = async function(req,res){
     const blogid = req.params.blogid;
@@ -63,7 +64,8 @@ exports.CreateBlog = async function(req,res){
                 description: description,
                 image: image,
                 mainpage:mainpage,
-                confirmation: confirmation      
+                confirmation: confirmation,
+                url: slugfield(title)      
             });
 
             if(category){
@@ -163,6 +165,7 @@ exports.EditBlog = async function(req,res){
             blog.image = image;
             blog.mainpage = mainpage;
             blog.confirmation = confirmation;
+            blog.url = slugfield(title);
             
             await blog.save();
         }
@@ -230,7 +233,7 @@ exports.CreateCategory = async function(req,res){
     const active = req.body.active == "on" ? 1 : 0;
     
     try {
-        await Category.create({name: name, active: active});
+        await Category.create({name: name, active: active, url: slugfield(name)});
 
         res.redirect("/admin/categories?action=create");
     } catch (error) {
@@ -265,6 +268,7 @@ exports.EditCategory = async function(req,res){
 
             category.name = name;
             category.active = active;
+            category.url = slugfield(name);
 
             await category.save();
         }

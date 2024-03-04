@@ -2,8 +2,8 @@
     <a  href="/blogs/category/all" class="list-group-item list-group-item-action 
     <%= selectedCategory == "all" ? 'active' : '' %> ">Tüm Kategoriler</a>
     <% categories.forEach(element => { %>
-        <a href="/blogs/category/<%= element.categoryid %>" 
+        <a href="/blogs/category/<%= element.url %>" 
             class="list-group-item list-group-item-action
-            <%= selectedCategory == element.categoryid ? 'active' : '' %>"><%= element.name %></a>
+            <%= selectedCategory == element.url ? 'active' : '' %>"><%= element.name %></a>
     <% }) %>
 </div>
