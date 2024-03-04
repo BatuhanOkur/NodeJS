@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const path = require("path");
-const db = require("../data/db");
 const Blog = require("../models/blog");
 const Category = require("../models/category");
 const { where } = require("sequelize");
@@ -38,14 +37,16 @@ router.use("/blogs/category/:categoryid", async function(req,res){
             });
         }else{
             const category = await Category.findByPk(categoryId);
-            const blogs = await category.getBlogs();
+            if(category){
+                const blogs = await category.getBlogs();
                           
-            res.render("users/blogs", {
-                title: "Bloglar",
-                blogs,
-                categories,
-                selectedCategory: categoryId
-            });   
+                res.render("users/blogs", {
+                    title: "Bloglar",
+                    blogs,
+                    categories,
+                    selectedCategory: categoryId
+                });   
+            }
         }
 
         

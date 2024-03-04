@@ -36,11 +36,9 @@
                             <select name="category" id="category" class="form-select" multiple>
                                 <option value="-1">Seçiniz</option>
                                 <% categories.forEach(category => { %>
-                                   <% if (relatedCategories.map(String).includes(category.dataValues.categoryid.toString())) { %>
-                                        <option value="<%= category.dataValues.categoryid %>" selected><%= category.dataValues.name %></option>
-                                    <% } else { %>
-                                        <option value="<%= category.dataValues.categoryid %>"><%= category.dataValues.name %></option>
-                                   <% } %>
+                                    <option value="<%= category.dataValues.categoryid %>" 
+                                        <%= blog.categories.some(cat => cat.categoryid == category.dataValues.categoryid) ? "selected" : "" %>
+                                        ><%= category.dataValues.name %></option>
                                 <% }) %>
                             </select>
                         </div>

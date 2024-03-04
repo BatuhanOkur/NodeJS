@@ -30,13 +30,11 @@ router.post("/blog/delete/:blogid", async function(req,res){
 
     try{
         const blog = await Blog.findByPk(blogid);
-        if(blog.hasCategories())
-        {
-            console.log("var");
+        if(blog){
+            await blog.destroy();
+            res.redirect("/admin/blogs?action=delete");
         }
-        //await blog.destroy();
-        //res.redirect("/admin/blogs?action=delete");
-        res.end();
+        res.redirect("/admin/blogs");
     }catch(error){
         console.log(error);
     }
@@ -68,32 +66,39 @@ router.post("/blog/create",imageUpload.upload.single("image") ,async function(re
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
     
     try {
-            const blog = await Blog.create({
-                title: title,
-                description: description,
-                image: image,
-                mainpage:mainpage,
-                confirmation: confirmation      
-            });
-        
-            if(blog.blogid)
-            {
-                if(category != -1){
-                    if(category.length > 1){
+            
+            if(category != -1){
+                if(category.length > 1){
+                    
+                    const blog = await Blog.create({
+                        title: title,
+                        description: description,
+                        image: image,
+                        mainpage:mainpage,
+                        confirmation: confirmation      
+                    });
 
-                        category.forEach(async element => {                                               
-                            //await BlogCategory.create({categoryid: element, blogid: blog.blogid});    
-                            let categoryItem = await Category.findByPk(element); 
-                            await blog.addCategory(categoryItem);                    
-                        }); 
+                    category.forEach(async element => {                                               
+                        //await BlogCategory.create({categoryid: element, blogid: blog.blogid});    
+                        let categoryItem = await Category.findByPk(element); 
+                        await blog.addCategory(categoryItem);                 
+                    }); 
+                    res.redirect("/admin/blogs?action=create");
 
-                    }else{                  
-                        let categoryItem = await Category.findByPk(category); 
-                        await blog.addCategory(categoryItem);      
-                    }
-                }  
-            }
-            res.redirect("/admin/blogs?action=create");
+                }else{                  
+                    let categoryItem = await Category.findByPk(category); 
+                    categoryItem.createBlog({
+                        title: title,
+                        description: description,
+                        image: image,
+                        mainpage:mainpage,
+                        confirmation: confirmation      
+                    });      
+
+                    res.redirect("/admin/blogs?action=create");
+                }
+            }  
+            res.redirect("/admin/blogs");
         } catch (error) {
             console.log(error);
         }
@@ -102,7 +107,15 @@ router.post("/blog/create",imageUpload.upload.single("image") ,async function(re
 router.get("/blogs/:blogid",async function(req,res){
     const blogId = req.params.blogid;
     try{
-        const blog = await Blog.findByPk(blogId);
+        const blog = await Blog.findOne({
+            where: {
+                blogid: blogId
+            },
+            include:{
+                model: Category,
+                attributes: ["categoryid"]
+            }
+        });
 
         const categories = await Category.findAll({
             where: {
@@ -110,27 +123,12 @@ router.get("/blogs/:blogid",async function(req,res){
             }
         });
 
-        const blogcategories = await BlogCategory.findAll({
-            attributes: ["categoryid"],
-            where: {
-                blogid:blogId
-            }
-        });
-
-
-        const relatedCategories = [];
-        blogcategories.forEach(element => {
-            relatedCategories.push(element.dataValues.categoryid);
-        })
-
-        console.log(relatedCategories);
         
         if(blog){
             res.render("admin/blog-edit",{
                 title: "Bloğu düzenle",
-                blog,
-                categories,
-                relatedCategories
+                blog: blog.dataValues,
+                categories
             });
         }else{
             res.redirect("/admin/blogs");
@@ -158,26 +156,22 @@ router.post("/blogs/:blogid",imageUpload.upload.single("image"),async function(r
     const confirmation = req.body.confirmation == "on" ? 1 : 0;
 
     try {
-        await db.execute(`
-        update blog 
-        set title = ?, 
-        description = ?,
-        image = ?,
-        mainpage = ?,
-        confirmation = ?
-        where blogid = ?
-        `, [title,description,image,mainpage,confirmation,blogid]);
 
-        await db.execute("delete from blogcategory where blogid = ?", [blogid]);
+        const blog = await Blog.findByPk(blogid);
+        if(blog){
+            
+            await blog.setCategories(category);
 
-        category.forEach(async element => {
-            await db.execute(
-                `INSERT INTO blogcategory(categoryid, blogid) VALUES (?, ?)`,
-                [element, blogid]
-              );
-        });
+            blog.title = title;
+            blog.description = description;
+            blog.image = image;
+            blog.mainpage = mainpage;
+            blog.confirmation = confirmation;
+            
+            await blog.save();
+        }
 
-        res.redirect("/admin/blogs?action=edit");
+        res.redirect("/admin/blogs?action=edit&blogid=" + blogid);
 
     } catch (error) {
         console.log(error);
@@ -269,8 +263,16 @@ router.post("/categories/:categoryid", async function(req,res){
     const active = req.body.active == "on" ? 1 : 0;
 
     try {
-        await db.execute("update category set name=?, active=? where categoryid = ?", [name,active,categoryid]);
-        res.redirect("/admin/categories?action=edit");
+        const category = await Category.findByPk(categoryid);
+        if(category){
+
+            category.name = name;
+            category.active = active;
+
+            await category.save();
+        }
+
+        res.redirect("/admin/categories?action=edit&categoryid=" + categoryid);
     } catch (error) {
         console.log(error);
     }
