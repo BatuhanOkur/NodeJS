@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user");
 
-router.use("/blogs/category/:slug", userController.ShowBlogsByCategory);
+router.get("/blogs/category/:slug", userController.ShowBlogsByCategory);
 
-router.use("/blogs/:slug", userController.ShowBlogDetail);
+router.get("/blogs/:slug", userController.ShowBlogDetail);
 
-router.use("/blogs", userController.ShowAllBlogs);
+router.get("/blogs", userController.ShowAllBlogs);
 
-router.use("/", userController.Index);
+router.get("/", userController.Index);
 
 module.exports = router;
