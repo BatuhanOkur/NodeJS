@@ -99,7 +99,7 @@ exports.ShowAllBlogs = async function(req,res){
     }
 }
 
-exports.ShowPopularBlogs = async function(req,res){
+exports.Index = async function(req,res){
     try{      
         const blogs = await Blog.findAll(
             {
