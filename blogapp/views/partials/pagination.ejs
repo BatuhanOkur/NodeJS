@@ -1,19 +1,22 @@
-<div class="nav">
-    <ul class="pagination justify-content-center">
-        <li class="page-item">
-            <a href="" class="page-link">Geri</a>                            
-        </li>
-        <li class="page-item active">
-            <a href="" class="page-link">1</a>                            
-        </li>
-        <li class="page-item">
-            <a href="" class="page-link">2</a>                            
-        </li>
-        <li class="page-item">
-            <a href="" class="page-link">3</a>                            
-        </li>
-        <li class="page-item">
-            <a href="" class="page-link">İleri</a>                            
-        </li>
-    </ul>
-</div>
+Sayfa Adedi: <%= totalPages %>
+Kayıt Adedi: <%= totalItems %>
+Geçerli Sayfa: <%= currentPage %>
+
+<% if (totalPages > 1) { %>
+    <div class="nav">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a href="?page=0" class="page-link">İlk</a>                            
+            </li>
+            <% for( let i = 0; i < totalPages; i++ ) { %>
+                <li class="page-item <%= i == currentPage ? "active" : "" %>">
+                    <a href="?page=<%= i %>" class="page-link"><%= i + 1 %></a>                            
+                </li>
+            <% } %>
+           
+            <li class="page-item">
+                <a href="?page=<%= totalPages - 1 %>" class="page-link">Son</a>                            
+            </li>
+        </ul>
+    </div> 
+<% } %>

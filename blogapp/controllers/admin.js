@@ -75,7 +75,7 @@ exports.CreateBlog = async function(req,res){
                     category.splice(index, 1)
                 }
 
-                if(category.length > 1){
+                if(category.length > 0){
 
                     category.forEach(async element => {                                               
                         //await BlogCategory.create({categoryid: element, blogid: blog.blogid});    

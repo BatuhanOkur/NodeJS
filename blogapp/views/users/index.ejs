@@ -17,11 +17,11 @@
             <div class="col-md-9">
                 <h1 class="h3 mb-3"><%=title%></h1>
                 <% blogs.forEach(blog => { %>
-                    <%- include('../partials/blog-card',blog.dataValues) %>
+                    <%- include('../partials/blog-card',blog) %>
                 <% }) %>
-                <% if (blogs.length > 3) { %>
-                    <%- include('../partials/pagination') %>
-                <% } %>
+               
+                <%- include('../partials/pagination') %>
+                
             </div>
         </div>
     </div>

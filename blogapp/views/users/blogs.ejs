@@ -21,12 +21,11 @@
                 <% } %>
 
                 <% blogs.forEach(blog => { %>
-                    <%- include('../partials/blog-card',blog.dataValues) %>
+                    <%- include('../partials/blog-card',blog) %>
                 <% }) %>
-
-                <% if (blogs.length > 3) { %>
-                    <%- include('../partials/pagination') %>
-                <% } %>
+                
+                <%- include('../partials/pagination') %>
+                
             </div>
         </div>
     </div>

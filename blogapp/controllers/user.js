@@ -2,9 +2,12 @@ const { raw } = require("express");
 const Blog = require("../models/blog");
 const Category = require("../models/category");
 const { where } = require("sequelize");
+const config = require("../config");
 
 exports.ShowBlogsByCategory = async function(req,res){
     const slug = req.params.slug;
+    const size = config.pagination.size;
+    const {page = 0} = req.query;
     try{
         const categories = await Category.findAll({
             where:{
@@ -14,26 +17,35 @@ exports.ShowBlogsByCategory = async function(req,res){
 
         if(slug === "all")
         {
-            const blogs = await Blog.findAll(
+            const {rows, count} = await Blog.findAndCountAll(
                 {
                     where:{
                         confirmation:1
-                    }
+                    },
+                    raw:true,
+                    limit: size,
+                    offset: page * size
                 }
             );
 
             res.render("users/blogs", {
                 title: "Bloglar",
-                blogs,
+                totalItems: count,
+                totalPages: Math.ceil(count / size),
+                currentPage: page,
+                blogs: rows,
                 categories,
                 selectedCategory: slug
             });
         }else{
             
-            const blogs = await Blog.findAll({
+            const {rows, count} = await Blog.findAndCountAll({
                 where: {
                     confirmation: true
                 },
+                raw:true,
+                limit: size,
+                offset: page * size,
                 include:{
                     model: Category,
                     where:{url: slug}
@@ -42,7 +54,10 @@ exports.ShowBlogsByCategory = async function(req,res){
                           
             res.render("users/blogs", {
                 title: "Bloglar",
-                blogs,
+                totalItems: count,
+                totalPages: Math.ceil(count / size),
+                currentPage: page,
+                blogs: rows,
                 categories,
                 selectedCategory: slug
             });   
@@ -84,13 +99,18 @@ exports.ShowBlogDetail = async function(req,res){
 }
 
 exports.ShowAllBlogs = async function(req,res){
+    const size = config.pagination.size;
+    const {page = 0} = req.query;
     try{
         
-        const blogs = await Blog.findAll(
+        const {rows, count} = await Blog.findAndCountAll(
             {
                 where:{
                     confirmation:1
-                }
+                },
+                raw:true,
+                limit: size,
+                offset: page * size
             }
         );
         
@@ -102,9 +122,13 @@ exports.ShowAllBlogs = async function(req,res){
 
         res.render("users/blogs", {
             title: "Bloglar",
-            blogs,
+            blogs: rows,
+            totalItems: count,
+            totalPages: Math.ceil(count / size),
+            currentPage: page,
             categories,
-            selectedCategory: null
+            selectedCategory: "all",
+            paginationSize : size
         });
     }
     catch(err){
@@ -113,13 +137,18 @@ exports.ShowAllBlogs = async function(req,res){
 }
 
 exports.Index = async function(req,res){
+    const size = config.pagination.size;
+    const {page = 0} = req.query;
     try{      
-        const blogs = await Blog.findAll(
+        const {rows, count} = await Blog.findAndCountAll(
             {
                 where:{
                     confirmation:1,
                     mainpage: 1
-                }
+                },
+                raw:true,
+                limit: size,
+                offset: page * size
             }
         );
 
@@ -131,9 +160,13 @@ exports.Index = async function(req,res){
 
         res.render("users/index", {
             title: "Bloglar",
-            blogs,
+            totalItems: count,
+            totalPages: Math.ceil(count / size),
+            currentPage: page,
+            blogs: rows,
             categories,
-            selectedCategory: "all"
+            selectedCategory: "all",
+            paginationSize : size
         });
     }
     catch(err){
