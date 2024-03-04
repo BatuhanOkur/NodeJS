@@ -17,6 +17,11 @@ const Category = sequelize.define("category", {
     active:{
         type: DataTypes.BOOLEAN,
         allowNull: false
+    },
+
+    url:{
+        type: DataTypes.STRING,
+        allowNull: false
     }
 });
 

@@ -31,6 +31,11 @@ const Blog = sequelize.define("blog", {
     confirmation:{
         type: DataTypes.BOOLEAN,
         allowNull: false
+    },
+
+    url:{
+        type: DataTypes.STRING,
+        allowNull: false
     }
 });
 
