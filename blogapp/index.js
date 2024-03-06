@@ -17,9 +17,19 @@ app.use(userRoutes);
 const Blog = require("./models/blog");
 const Category = require("./models/category");
 const sequelize = require("./data/db");
+const User = require("./models/user");
 
 Blog.belongsToMany(Category, { through: 'blogCategories' });
 Category.belongsToMany(Blog, { through: 'blogCategories' });
+
+//1-n relation
+Blog.belongsTo(User, {
+    foreignkey: {
+        allowNull: true
+    }
+});
+
+User.hasMany(Blog);
 
 (async () =>{
     //await sequelize.sync({force: true});
