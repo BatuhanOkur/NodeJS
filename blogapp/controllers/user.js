@@ -166,7 +166,7 @@ exports.Index = async function(req,res){
             blogs: rows,
             categories,
             selectedCategory: "all",
-            paginationSize : size
+            isAuth : req.cookies.isAuth
         });
     }
     catch(err){

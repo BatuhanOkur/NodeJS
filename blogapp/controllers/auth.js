@@ -53,15 +53,22 @@ exports.Login = async function(req, res){
         });
 
         if(user){
+
             const match = await bcrypt.compare(password, user.password);
+
             if(match){
+                
+                res.cookie("isAuth", 1);
                 res.redirect("/");
+
             }else{
+
                 return res.render("auth/login",{
                     title: "Giriş Yap",
                     message: "Hatalı parola girdiniz!"
                 });
             }
+
         }else{
             return res.render("auth/login",{
                 title: "Giriş Yap",
