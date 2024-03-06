@@ -30,3 +30,48 @@ exports.Register = async function(req, res){
         console.log(error);
     }
 }
+
+exports.ShowLoginPage = async function(req, res){
+    try {
+        return res.render("auth/login",{
+            title: "Giriş Yap"
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.Login = async function(req, res){
+    const email = req.body.email;
+    const password = req.body.password;
+
+    try {
+        const user = await User.findOne({
+            where:{
+                email: email
+            }
+        });
+
+        if(user){
+            const match = await bcrypt.compare(password, user.password);
+            if(match){
+                res.redirect("/");
+            }else{
+                return res.render("auth/login",{
+                    title: "Giriş Yap",
+                    message: "Hatalı parola girdiniz!"
+                });
+            }
+        }else{
+            return res.render("auth/login",{
+                title: "Giriş Yap",
+                message: "Girilen mail adresiyle kayıtlı bir kullanıcı bulunamadı!"
+            });
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
