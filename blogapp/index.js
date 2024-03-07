@@ -27,6 +27,7 @@ const User = require("./models/user");
 //custom modules
 const sequelize = require("./data/db");
 const { Sequelize } = require("sequelize");
+const locals = require("./middlewares/locals");
 
 //template engine
 app.set("view engine", "ejs");
@@ -45,6 +46,8 @@ app.use(session({
         db: sequelize
     })
 }));
+
+app.use(locals);
 
 app.use("/libs",express.static(path.join(__dirname,"node_modules")));
 app.use("/static",express.static(path.join(__dirname,"public")));

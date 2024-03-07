@@ -59,7 +59,8 @@ exports.Login = async function(req, res){
             if(match){
                 
                 // res.cookie("isAuth", 1);
-                req.session.isAuth = 1;
+                req.session.isAuth = true;
+                req.session.fullname = user.fullname;
 
                 return res.redirect("/");
 

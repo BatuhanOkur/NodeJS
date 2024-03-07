@@ -5,7 +5,7 @@
             <li class="nav-item">
                 <a href="/blogs" class="nav-link">Bloglar</a>
             </li>
-            <% if (typeof isAuth != "undefined" && isAuth == "1") { %>
+            <% if (isAuth) { %>
                 <li class="nav-item">
                     <a href="/admin/blogs" class="nav-link">Blogları Yönet</a>
                 </li>
@@ -23,7 +23,10 @@
         </ul>
         <ul class="navbar-nav ms-auto">
             
-            <% if (typeof isAuth != "undefined" && isAuth == "1") { %>
+            <% if (isAuth) { %>
+                <li class="nav-item">
+                    <a href="/account/index" class="nav-link"><%= fullname %></a>
+                </li>
                 <li class="nav-item">
                     <a href="/account/logout" class="nav-link">Çıkış Yap</a>
                 </li>
