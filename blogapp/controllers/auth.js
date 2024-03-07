@@ -82,3 +82,12 @@ exports.Login = async function(req, res){
 
 }
 
+exports.Logout = async function(req, res){
+    res.clearCookie("isAuth");
+    try {
+        return res.redirect("login");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
