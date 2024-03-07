@@ -58,8 +58,10 @@ exports.Login = async function(req, res){
 
             if(match){
                 
-                res.cookie("isAuth", 1);
-                res.redirect("/");
+                // res.cookie("isAuth", 1);
+                req.session.isAuth = 1;
+
+                return res.redirect("/");
 
             }else{
 
@@ -83,7 +85,8 @@ exports.Login = async function(req, res){
 }
 
 exports.Logout = async function(req, res){
-    res.clearCookie("isAuth");
+    //res.clearCookie("isAuth");
+    await req.session.destroy();
     try {
         return res.redirect("login");
     } catch (error) {

@@ -166,7 +166,7 @@ exports.Index = async function(req,res){
             blogs: rows,
             categories,
             selectedCategory: "all",
-            isAuth : req.cookies.isAuth
+            isAuth : req.session.isAuth
         });
     }
     catch(err){
