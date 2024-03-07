@@ -14,7 +14,10 @@ app.use(cookieParser());
 app.use(session({
     secret: "123456",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie:{
+        maxAge: 86400000
+    }
 }));
 
 app.use("/libs",express.static(path.join(__dirname,"node_modules")));
