@@ -19,22 +19,35 @@ exports.Register = async function(req, res){
     const hashedPassword = await bcrypt.hash(password, 10);
     
     try {
+        const user = await User.findOne({ where: { email:email } });
+
+        if(user){
+            req.session.message = {text: "Girdiğiniz email adresiyle daha önce kayıt olunmuş.", class: "warning"};
+            return res.redirect("login");
+        }
+
         await User.create({
             fullname,
             email,
             password : hashedPassword
         });
 
+        req.session.message = {text: "Kayıt işlemi başarılı, hesabınıza giriş yapabilirsiniz.", class: "success"};
         return res.redirect("login");
+
     } catch (error) {
         console.log(error);
     }
 }
 
 exports.ShowLoginPage = async function(req, res){
+    const message = req.session.message;
+    delete req.session.message;
+
     try {
         return res.render("auth/login",{
-            title: "Giriş Yap"
+            title: "Giriş Yap",
+            message
         });
     } catch (error) {
         console.log(error);
@@ -62,20 +75,21 @@ exports.Login = async function(req, res){
                 req.session.isAuth = true;
                 req.session.fullname = user.fullname;
 
-                return res.redirect("/");
+                const url = req.query.returnUrl || "/";
+                return res.redirect(url);
 
             }else{
 
                 return res.render("auth/login",{
                     title: "Giriş Yap",
-                    message: "Hatalı parola girdiniz!"
+                    message: {text: "Hatalı parola girdiniz!", class: "warning"}
                 });
             }
 
         }else{
             return res.render("auth/login",{
                 title: "Giriş Yap",
-                message: "Girilen mail adresiyle kayıtlı bir kullanıcı bulunamadı!"
+                message: {text: "Girilen mail adresiyle kayıtlı bir kullanıcı bulunamadı!", class: "warning"}
             });
         }
 
