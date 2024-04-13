@@ -3,38 +3,39 @@ const router = express.Router();
 const imageUpload = require("../helpers/image-upload");
 const fs = require("fs");
 const adminController = require("../controllers/admin");
+const isAuth = require("../middlewares/auth");
 
 
 
 
-router.get("/blog/delete/:blogid", adminController.ShowBlogDeletePage);
+router.get("/blog/delete/:blogid", isAuth, adminController.ShowBlogDeletePage);
 
-router.post("/blog/delete/:blogid", adminController.DeleteBlog);
+router.post("/blog/delete/:blogid", isAuth, adminController.DeleteBlog);
 
-router.get("/blog/create", adminController.ShowCreateBlogPage);
+router.get("/blog/create", isAuth, adminController.ShowCreateBlogPage);
 
-router.post("/blog/create",imageUpload.upload.single("image") , adminController.CreateBlog);
+router.post("/blog/create", isAuth, imageUpload.upload.single("image") , adminController.CreateBlog);
 
-router.get("/blogs/:blogid", adminController.ShowEditBlogPage);
+router.get("/blogs/:blogid", isAuth, adminController.ShowEditBlogPage);
 
-router.post("/blogs/:blogid",imageUpload.upload.single("image"), adminController.EditBlog);
+router.post("/blogs/:blogid", isAuth, imageUpload.upload.single("image"), adminController.EditBlog);
 
-router.get("/blogs", adminController.GetBlogs);
+router.get("/blogs", isAuth, adminController.GetBlogs);
 
-router.get("/category/delete/:categoryid", adminController.ShowCategoryDeletePage);
+router.get("/category/delete/:categoryid", isAuth, adminController.ShowCategoryDeletePage);
 
-router.post("/category/delete/:categoryid", adminController.DeleteCategory);
+router.post("/category/delete/:categoryid", isAuth, adminController.DeleteCategory);
 
 
-router.get("/category/create", adminController.ShowCategoryCreatePage);
+router.get("/category/create", isAuth, adminController.ShowCategoryCreatePage);
 
-router.post("/category/create", adminController.CreateCategory);
+router.post("/category/create", isAuth, adminController.CreateCategory);
 
-router.get("/categories/:categoryid", adminController.ShowCategoryEditPage);
+router.get("/categories/:categoryid", isAuth, adminController.ShowCategoryEditPage);
 
-router.post("/categories/:categoryid", adminController.EditCategory);
+router.post("/categories/:categoryid", isAuth, adminController.EditCategory);
 
-router.get("/categories", adminController.GetCategories);
+router.get("/categories", isAuth, adminController.GetCategories);
 
 
 
