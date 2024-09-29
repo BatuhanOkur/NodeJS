@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth");
+const csrf = require("../middlewares/csrf");
 
-router.get("/register", authController.ShowRegisterPage);
+router.get("/register",csrf, authController.ShowRegisterPage);
 router.post("/register", authController.Register);
 
-router.get("/login", authController.ShowLoginPage);
+router.get("/login",csrf, authController.ShowLoginPage);
 router.post("/login", authController.Login);
-router.get("/logout", authController.Logout);
+router.get("/logout",csrf, authController.Logout);
 
 module.exports = router;

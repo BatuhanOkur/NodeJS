@@ -17,6 +17,7 @@
                         <b><%= category.name %></b> <br> isimli kategoriyi silmek istiyor musunuz?
                     </p>
                     <form action="" method="post">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <input type="hidden" name="categoryid" value="<%= category.categoryid %>">
                         <button class="btn btn-danger" type="submit">Evet</button>
                         <a href="/admin/categories" class="btn btn-primary">Vazgeç</a>

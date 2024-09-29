@@ -47,7 +47,8 @@ exports.ShowLoginPage = async function(req, res){
     try {
         return res.render("auth/login",{
             title: "Giriş Yap",
-            message
+            message,
+            csrfToken: req.csrfToken(),
         });
     } catch (error) {
         console.log(error);
@@ -82,14 +83,16 @@ exports.Login = async function(req, res){
 
                 return res.render("auth/login",{
                     title: "Giriş Yap",
-                    message: {text: "Hatalı parola girdiniz!", class: "warning"}
+                    message: {text: "Hatalı parola girdiniz!", class: "warning"},
+                    csrfToken: req.csrfToken()
                 });
             }
 
         }else{
             return res.render("auth/login",{
                 title: "Giriş Yap",
-                message: {text: "Girilen mail adresiyle kayıtlı bir kullanıcı bulunamadı!", class: "warning"}
+                message: {text: "Girilen mail adresiyle kayıtlı bir kullanıcı bulunamadı!", class: "warning"},
+                csrfToken: req.csrfToken()
             });
         }
 
